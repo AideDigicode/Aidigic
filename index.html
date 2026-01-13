@@ -2,193 +2,193 @@
 <html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="aidigic_ico.ico" type="image/x-icon">
-  <title>Le DigiDécodeur</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #ffffff;
-      text-align: center;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="aidigic_ico.ico" type="image/x-icon">
+    <title>Le DigiDécodeur</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
 
-    #history {
-      color: gray;
-    }
+        #history {
+            color: gray;
+        }
 
-    input[type="text"],
-    input[type="number"] {
-      margin: 5px;
-      padding: 10px;
-      font-size: 16px;
-      width: 200px;
-    }
+        input[type="text"],
+        input[type="number"] {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+        }
 
-    button {
-      padding: 10px 20px;
-      margin: 6px;
-      font-size: 16px;
-      background-color: #ff0000;
-      color: #ffffff;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
+        button {
+            padding: 10px 20px;
+            margin: 6px;
+            font-size: 16px;
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
 
-    #tentative {
-      background-color: #09a111;
-    }
+        #tentative {
+            background-color: #09a111;
+        }
 
-    #suggested-combination {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
+        #suggested-combination {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
 
-    #suggestion {
-      letter-spacing: 5px;
-    }
+        #suggestion {
+            letter-spacing: 5px;
+        }
 
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid #ffffff;
-      width: 24px;
-      height: 24px;
-      animation: spin 0.5s linear infinite;
-      display: inline-block;
-      vertical-align: middle;
-    }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #ffffff;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.5s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
 
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <h1>Le DigiDécodeur 🔓</h1>
+    <h1>Le DigiDécodeur 🔓</h1>
 
-  <div>
-    <input type="text" id="combination" placeholder="Votre combinaison (ex: 123456AB)">
-    <input type="number" id="exact" placeholder="Nombre d'éléments exacts"
-      onkeyup="if (event.key === 'Enter') handleButtonClick()">
-    <button id="tentative" onclick="handleButtonClick()">Ajouter Tentative</button>
-  </div>
+    <div>
+        <input type="text" id="combination" placeholder="Votre combinaison (ex: 123456AB)">
+        <input type="number" id="exact" placeholder="Nombre d'éléments exacts"
+            onkeyup="if (event.key === 'Enter') handleButtonClick()">
+        <button id="tentative" onclick="handleButtonClick()">Ajouter Tentative</button>
+    </div>
 
-  <div id="suggested-combination">
+    <div id="suggested-combination">
+        <br>
+        Combinaison suggérée : <span id="suggestion">?</span>
+    </div>
     <br>
-    Combinaison suggérée : <span id="suggestion">?</span>
-  </div>
-  <br>
 
-  <div id="history"></div>
+    <div id="history"></div>
 
-  <button onclick="clearHistory()">Réinitialiser</button>
+    <button onclick="clearHistory()">Réinitialiser</button>
 
-  <script>
-    
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
+    <script>
 
-    const savedData = JSON.parse(localStorage.getItem('gameData')) || {};
-    let history = savedData.history || [];
-
-    function updateHistoryDisplay() {
-      const historyDiv = document.getElementById('history');
-      historyDiv.innerHTML = '';
-      [...history].reverse().forEach((entry, index) => {
-        const displayIndex = history.length - index;
-        historyDiv.innerHTML += `<p>${displayIndex}. Combinaison: ${entry.combination}, Exact: ${entry.exact}</p>`;
-      });
-
-    }
-
-    function showLoadingSpinner() {
-      document.getElementById('suggestion').innerHTML = '<div class="spinner"></div>';
-    }
-
-    function saveData() {
-      const gameData = { history, suggestedCombination: document.getElementById('suggestion').textContent };
-      localStorage.setItem('gameData', JSON.stringify(gameData));
-    }
-
-    function handleButtonClick() {
-      const combinationInput = document.getElementById('combination');
-      const exactInput = document.getElementById('exact');
-      const combination = combinationInput.value.toUpperCase().trim();
-      const exact = parseInt(exactInput.value.trim());
-
-      if (combination.length === 8 && !isNaN(exact) && exact >= 0 && exact <= 8) {
-        showLoadingSpinner();
-        setTimeout(() => {
-          history.push({ combination, exact });
-          updateHistoryDisplay();
-
-          suggestCombinationOptimized();
-          combinationInput.value = '';
-          exactInput.value = '';
-          saveData();
-        }, 50);
-      } else {
-        alert("Veuillez entrer une combinaison valide et un nombre d'éléments exacts valide.");
-      }
-    }
-
-    function findValidCandidate(history, prefix, index) {
-      if (index === 8) {
-        for (let attempt of history) {
-          let count = 0;
-          for (let i = 0; i < 8; i++) {
-            if (prefix[i] === attempt.combination[i]) count++;
-          }
-          if (count !== attempt.exact) return null;
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
         }
-        return prefix;
-      }
-      let candidates = (index < 6) ? '0123456789'.split('') : 'ABC'.split('');
-      candidates = shuffleArray(candidates);
-      for (let char of candidates) {
-        const newPrefix = prefix + char;
-        let feasible = true;
-        for (let attempt of history) {
-          let count = 0;
-          for (let i = 0; i < newPrefix.length; i++) {
-            if (newPrefix[i] === attempt.combination[i]) count++;
-          }
-          const remaining = 8 - newPrefix.length;
-          if (count > attempt.exact || count + remaining < attempt.exact) {
-            feasible = false;
-            break;
-          }
+
+        const savedData = JSON.parse(localStorage.getItem('gameData')) || {};
+        let history = savedData.history || [];
+
+        function updateHistoryDisplay() {
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = '';
+            [...history].reverse().forEach((entry, index) => {
+                const displayIndex = history.length - index;
+                historyDiv.innerHTML += `<p>${displayIndex}. Combinaison: ${entry.combination}, Exact: ${entry.exact}</p>`;
+            });
+
         }
-        if (!feasible) continue;
-        const result = findValidCandidate(history, newPrefix, index + 1);
-        if (result !== null) return result;
-      }
-      return null;
-    }
 
-    function suggestCombinationOptimized() {
-      showLoadingSpinner();
-      if (window.Worker) {
+        function showLoadingSpinner() {
+            document.getElementById('suggestion').innerHTML = '<div class="spinner"></div>';
+        }
 
-        const workerCode = `
+        function saveData() {
+            const gameData = { history, suggestedCombination: document.getElementById('suggestion').textContent };
+            localStorage.setItem('gameData', JSON.stringify(gameData));
+        }
+
+        function handleButtonClick() {
+            const combinationInput = document.getElementById('combination');
+            const exactInput = document.getElementById('exact');
+            const combination = combinationInput.value.toUpperCase().trim();
+            const exact = parseInt(exactInput.value.trim());
+
+            if (combination.length === 8 && !isNaN(exact) && exact >= 0 && exact <= 8) {
+                showLoadingSpinner();
+                setTimeout(() => {
+                    history.push({ combination, exact });
+                    updateHistoryDisplay();
+
+                    suggestCombinationOptimized();
+                    combinationInput.value = '';
+                    exactInput.value = '';
+                    saveData();
+                }, 50);
+            } else {
+                alert("Veuillez entrer une combinaison valide et un nombre d'éléments exacts valide.");
+            }
+        }
+
+        function findValidCandidate(history, prefix, index) {
+            if (index === 8) {
+                for (let attempt of history) {
+                    let count = 0;
+                    for (let i = 0; i < 8; i++) {
+                        if (prefix[i] === attempt.combination[i]) count++;
+                    }
+                    if (count !== attempt.exact) return null;
+                }
+                return prefix;
+            }
+            let candidates = (index < 6) ? '0123456789'.split('') : 'ABC'.split('');
+            candidates = shuffleArray(candidates);
+            for (let char of candidates) {
+                const newPrefix = prefix + char;
+                let feasible = true;
+                for (let attempt of history) {
+                    let count = 0;
+                    for (let i = 0; i < newPrefix.length; i++) {
+                        if (newPrefix[i] === attempt.combination[i]) count++;
+                    }
+                    const remaining = 8 - newPrefix.length;
+                    if (count > attempt.exact || count + remaining < attempt.exact) {
+                        feasible = false;
+                        break;
+                    }
+                }
+                if (!feasible) continue;
+                const result = findValidCandidate(history, newPrefix, index + 1);
+                if (result !== null) return result;
+            }
+            return null;
+        }
+
+        function suggestCombinationOptimized() {
+            showLoadingSpinner();
+            if (window.Worker) {
+
+                const workerCode = `
           function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
@@ -235,49 +235,49 @@
             postMessage({ candidate });
           }
         `;
-        const blob = new Blob([workerCode], { type: "application/javascript" });
-        const worker = new Worker(URL.createObjectURL(blob));
-        worker.onmessage = function (e) {
-          let candidate = e.data.candidate;
-          if (candidate === null) candidate = "Aucun candidat trouvé";
-          document.getElementById('suggestion').textContent = candidate;
-          document.getElementById('combination').value = candidate;
-          saveData();
-          worker.terminate();
+                const blob = new Blob([workerCode], { type: "application/javascript" });
+                const worker = new Worker(URL.createObjectURL(blob));
+                worker.onmessage = function (e) {
+                    let candidate = e.data.candidate;
+                    if (candidate === null) candidate = "Aucun candidat trouvé";
+                    document.getElementById('suggestion').textContent = candidate;
+                    document.getElementById('combination').value = candidate;
+                    saveData();
+                    worker.terminate();
+                };
+                worker.postMessage({ history });
+            } else {
+
+                const candidate = findValidCandidate(history, "", 0) || "Aucun candidat trouvé";
+                document.getElementById('suggestion').textContent = candidate;
+                document.getElementById('combination').value = candidate;
+                saveData();
+            }
+        }
+
+        function clearHistory() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser les données ?')) {
+                showLoadingSpinner();
+                setTimeout(() => {
+                    localStorage.removeItem('gameData');
+                    history = [];
+                    updateHistoryDisplay();
+                    suggestCombinationOptimized();
+                }, 50);
+            }
+        }
+
+        window.onload = function () {
+            if (savedData.history) {
+                updateHistoryDisplay();
+                document.getElementById('suggestion').textContent = savedData.suggestedCombination || '?';
+                document.getElementById('combination').value = savedData.suggestedCombination || '';
+            } else {
+                suggestCombinationOptimized();
+            }
         };
-        worker.postMessage({ history });
-      } else {
 
-        const candidate = findValidCandidate(history, "", 0) || "Aucun candidat trouvé";
-        document.getElementById('suggestion').textContent = candidate;
-        document.getElementById('combination').value = candidate;
-        saveData();
-      }
-    }
-
-    function clearHistory() {
-      if (confirm('Êtes-vous sûr de vouloir réinitialiser les données ?')) {
-        showLoadingSpinner();
-        setTimeout(() => {
-          localStorage.removeItem('gameData');
-          history = [];
-          updateHistoryDisplay();
-          suggestCombinationOptimized();
-        }, 50);
-      }
-    }
-
-    window.onload = function () {
-      if (savedData.history) {
-        updateHistoryDisplay();
-        document.getElementById('suggestion').textContent = savedData.suggestedCombination || '?';
-        document.getElementById('combination').value = savedData.suggestedCombination || '';
-      } else {
-        suggestCombinationOptimized();
-      }
-    };
-
-  </script>
+    </script>
 
 </body>
 
