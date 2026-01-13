@@ -112,9 +112,11 @@
     function updateHistoryDisplay() {
       const historyDiv = document.getElementById('history');
       historyDiv.innerHTML = '';
-      history.forEach((entry, index) => {
-        historyDiv.innerHTML += `<p>${index + 1}. Combinaison: ${entry.combination}, Exact: ${entry.exact}</p>`;
+      [...history].reverse().forEach((entry, index) => {
+        const displayIndex = history.length - index;
+        historyDiv.innerHTML += `<p>${displayIndex}. Combinaison: ${entry.combination}, Exact: ${entry.exact}</p>`;
       });
+
     }
 
     function showLoadingSpinner() {
