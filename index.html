@@ -91,7 +91,7 @@
         Combinaison suggérée : <span id="suggestion">?</span>
     </div>
     <br>
-    <a href="javascript:undo()">Revenir en arrière</a>
+    <a href="javascript:undo()" style="color:red">Retour en arrière ↺</a>
 
     <div id="history"></div>
 
@@ -272,11 +272,13 @@
 
         if (confirm("Supprimer la dernière entrée ?")) {
             let obj = JSON.parse(localStorage.gameData);
+            obj.suggestedCombination = obj.history.at(-1).combination;
             obj.history.pop();
             history = obj.history;
+            document.getElementById('suggestion').textContent = obj.suggestedCombination;
+            document.getElementById('combination').value = obj.suggestedCombination;
             localStorage.gameData = JSON.stringify(obj);
             updateHistoryDisplay();
-            suggestCombinationOptimized();
             }
 
         }
