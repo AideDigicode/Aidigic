@@ -88,6 +88,7 @@
 
     <div id="suggested-combination">
         <br>
+        <a href="javascript:undo()">Revenir en arrière</a>
         Combinaison suggérée : <span id="suggestion">?</span>
     </div>
     <br>
@@ -266,6 +267,20 @@
                 }, 50);
             }
         }
+
+        function undo() {
+
+        if (confirm("Supprimer la dernière entrée ?")) {
+            let obj = JSON.parse(localStorage.gameData);
+            obj.history.pop();
+            history = obj.history;
+            localStorage.gameData = JSON.stringify(obj);
+            updateHistoryDisplay();
+            suggestCombinationOptimized();
+            }
+
+        }
+
 
         window.onload = function () {
             if (savedData.history) {
