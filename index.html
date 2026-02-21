@@ -81,84 +81,191 @@
             }
         }
 
-        buttonHisto {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            border-radius: 7px;
-            border: 1px solid rgb(61, 106, 255);
-            font-size: 14px;
-            font-weight: 600;
-            background: transparent;
-            color: #fff;
-            overflow: hidden;
-            box-shadow: 0 0 0 0 transparent;
-            -webkit-transition: all 0.2s ease-in;
-            -moz-transition: all 0.2s ease-in;
-            transition: all 0.2s ease-in;
-        }
+    .event-wrapper > .event-wrapper-inp {
+        display: none;
+    }
 
-        buttonHisto:hover {
-            background: rgb(61, 106, 255);
-            box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
-            -webkit-transition: all 0.2s ease-out;
-            -moz-transition: all 0.2s ease-out;
-            transition: all 0.2s ease-out;
-        }
+    .event-wrapper {
+        font-weight: 500;
+        color: white;
+        background-color: rgb(0, 0, 0);
+        padding: 3px 15px;
+        border-radius: 10px;
 
-        buttonHisto:hover::before {
-            -webkit-animation: sh02 0.5s 0s linear;
-            -moz-animation: sh02 0.5s 0s linear;
-            animation: sh02 0.5s 0s linear;
-        }
+        display: flex;
+        align-items: center;
+        height: 1.6rem;
+        width: fit-content;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        cursor: pointer;
+        justify-content: space-between;
+    }
 
-        buttonHisto::before {
-            content: '';
-            display: block;
-            width: 0px;
-            height: 86%;
-            position: absolute;
-            top: 7%;
-            left: 0%;
-            opacity: 0;
-            background: #fff;
-            box-shadow: 0 0 50px 30px #fff;
-            -webkit-transform: skewX(-20deg);
-            -moz-transform: skewX(-20deg);
-            -ms-transform: skewX(-20deg);
-            -o-transform: skewX(-20deg);
-            transform: skewX(-20deg);
-        }
+    .arrow {
+        height: 34%;
+        aspect-ratio: 1;
+        margin-block: auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        transition: all 0.3s;
+    }
 
-        @keyframes sh02 {
-            from {
-                opacity: 0;
-                left: 0%;
-            }
+    .arrow::after,
+    .arrow::before {
+        content: "";
+        position: absolute;
+        background-color: white;
+        height: 100%;
+        width: 2.5px;
+        border-radius: 500px;
+        transform-origin: bottom;
+    }
 
-            50% {
-                opacity: 1;
-            }
+    .arrow::after {
+        transform: rotate(35deg) translateX(-0.5px);
+    }
+    .arrow::before {
+        transform: rotate(-35deg) translateX(0.5px);
+    }
 
-            to {
-                opacity: 0;
-                left: 100%;
-            }
-        }
+    .event-wrapper > .event-wrapper-inp:checked + .arrow {
+        transform: rotateX(180deg);
+    }
 
-        buttonHisto:active {
-            box-shadow: 0 0 0 0 transparent;
-            -webkit-transition: box-shadow 0.2s ease-in;
-            -moz-transition: box-shadow 0.2s ease-in;
-            transition: box-shadow 0.2s ease-in;
-        }
+    .menu-container {
+        background-color: white;
+        color: darkviolet;
+        border-radius: 10px;
+        position: absolute;
+        width: 150px;
+        left: -100px;
+        top: 130%;
+        overflow: hidden;
+        clip-path: inset(0% 0% 0% 0% round 10px);
+        transition: all 0.4s;
+    }
+
+    .menu-list {
+        --delay: 0.4s;
+        --trdelay: 0.15s;
+        padding: 8px 10px;
+        border-radius: inherit;
+        transition: background-color 0.2s 0s;
+        position: relative;
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    .menu-list::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.3);
+        width: 95%;
+    }
+
+    .menu-list:hover {
+        background-color: rgb(223, 223, 223);
+    }
+
+    .event-wrapper-inp:checked ~ .menu-container {
+        clip-path: inset(10% 50% 90% 50% round 10px);
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .menu-container .menu-list {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .menu-container .menu-list:nth-child(1) {
+        transition:
+            transform 0.4s var(--delay),
+            opacity 0.4s var(--delay);
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .menu-container .menu-list:nth-child(2) {
+        transition:
+            transform 0.4s calc(var(--delay) + (var(--trdelay) * 1)),
+            opacity 0.4s calc(var(--delay) + (var(--trdelay) * 1));
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .menu-container .menu-list:nth-child(3) {
+        transition:
+            transform 0.4s calc(var(--delay) + (var(--trdelay) * 2)),
+            opacity 0.4s calc(var(--delay) + (var(--trdelay) * 2));
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .menu-container .menu-list:nth-child(4) {
+        transition:
+            transform 0.4s calc(var(--delay) + (var(--trdelay) * 3)),
+            opacity 0.4s calc(var(--delay) + (var(--trdelay) * 3));
+    }
+
+    .bar-event-wrapper-inp {
+        -webkit-appearance: none;
+        display: none;
+        visibility: hidden;
+    }
+
+    .bar {
+        display: flex;
+        height: 50%;
+        width: 20px;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .bar-list {
+        --transform: -25%;
+        display: block;
+        width: 100%;
+        height: 3px;
+        border-radius: 50px;
+        background-color: white;
+        transition: all 0.4s;
+        position: relative;
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .bar > .top {
+        transform-origin: top right;
+        transform: translateY(var(--transform)) rotate(-45deg);
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .bar > .middle {
+        transform: translateX(-50%);
+        opacity: 0;
+    }
+
+    .event-wrapper-inp:not(:checked) ~ .bar > .bottom {
+        transform-origin: bottom right;
+        transform: translateY(calc(var(--transform) * -1)) rotate(45deg);
+    }
+
     </style>
 </head>
 
 <body>
 
     <h1>Le DigiDécodeur 🔓</h1>
+
+    <label class="event-wrapper">
+  <input type="checkbox" checked="" class="event-wrapper-inp" />
+  <div class="bar">
+    <span class="top bar-list"></span>
+    <span class="middle bar-list"></span>
+    <span class="bottom bar-list"></span>
+  </div>
+  <section class="menu-container">
+    <div class="menu-list" onclick="chargeData()">Charger json</div>
+    <div class="menu-list" onclick="copyData()">Copier json</div>
+  </section>
+    </label>
 
     <div>
         <input type="text" id="combination" placeholder="Votre combinaison (ex: 123456AB)">
@@ -175,8 +282,6 @@
     <a href="javascript:undo()" style="color:red">Retour en arrière ↺</a>
 
     <div id="history"></div>
-
-    <!-- <buttonHisto onclick="copyPasteHisto()">↗</buttonHisto> -->
 
     <button onclick="clearHistory()">Réinitialiser</button>
 
@@ -383,6 +488,27 @@
             updateHistoryDisplay();
 
         }
+
+        function copyData() {
+
+            navigator.clipboard.writeText(localStorage.gameData);
+            alert("Data copiée dans le presse-papier");
+
+        }
+
+        function chargeData() {
+
+            let data = prompt("Entrer la data json ici :");
+            if (data === null || data == '') { return };
+            localStorage.gameData = data;
+            let obj = JSON.parse(localStorage.gameData);
+            history = obj.history;
+            document.getElementById('suggestion').textContent = obj.suggestedCombination;
+            document.getElementById('combination').value = obj.suggestedCombination;
+            updateHistoryDisplay();
+
+        }
+
 
         window.onload = function () {
             if (savedData.history) {
